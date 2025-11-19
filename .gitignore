@@ -1,3 +1,4 @@
 yt_elt_venv/
 __pycache__/
 .env
+logs/
