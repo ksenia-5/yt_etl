@@ -1,9 +1,8 @@
 import requests
 import json
-
+from datetime import date
 import os
 from dotenv import load_dotenv
-
 load_dotenv(dotenv_path='./.env')
 
 API_KEY = os.getenv('API_KEY')
@@ -103,8 +102,20 @@ def extract_video_data(video_id_list):
     except requests.exceptions.RequestException as e:
         raise e
     
+def save_to_json(extracted_data):
+    
+    data_dir = f'./data/{date.today()}'
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+    
+    file_path = f'{data_dir}/yt_data__{YT_HANDLE}__{date.today()}.json'
+    
+    with open(file_path, "w", encoding='utf-8') as json_outfile:
+        json.dump(extracted_data, json_outfile, indent=4, ensure_ascii=False)
+
 
 if __name__ == '__main__':
     playlist_id = get_playlist_id()
     video_id_list = get_playlist_items(playlist_id)
     video_data = extract_video_data(video_id_list)
+    save_to_json(video_data)
